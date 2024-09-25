@@ -58,38 +58,60 @@ const CountryPage = ({ params }: { params: { code: string } }) => {
     fetchCountries();
   }, []);
 
-  if (loading) return <p>Carregando informações do país...</p>;
-  if (error) return <p>{error}</p>;
+  // Adicionando estilo para loading e error
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-96">
+        <p className="text-lg text-gray-700 ">
+          Carregando informações do país...
+        </p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-96">
+        <p className="text-lg text-red-500 ">{error}</p>
+      </div>
+    );
 
   return (
-    <div>
-      <h1>{countryInfo?.country}</h1>
+    <div className="p-6 rounded shadow-md max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold text-center mb-4">
+        {countryInfo?.country}
+      </h1>
       <Image
         src={countryInfo?.flag}
         alt={`${countryInfo?.country} Flag`}
         width={200}
         height={200}
+        className="mx-auto mb-4 rounded"
       />
-      <h2>Países Vizinhos:</h2>
-      <ul>
+      <h2 className="text-2xl font-semibold mt-6 mb-2">Países Vizinhos:</h2>
+      <ul className="list-disc list-inside mb-6">
         {countryInfo?.borders.map((borderCode) => {
           const borderCountry = countries.find(
             (country) => country.name === borderCode
           );
           return (
-            <li key={borderCode}>
+            <li key={borderCode} className="mb-1">
               {borderCountry ? (
-                <Link href={`/country/${borderCountry.countryCode}`}>
+                <Link
+                  href={`/country/${borderCountry.countryCode}`}
+                  className="text-blue-500 hover:underline"
+                >
                   {borderCountry.name}
                 </Link>
               ) : (
-                <span>{borderCode}</span>
+                <span className="text-gray-500">{borderCode}</span>
               )}
             </li>
           );
         })}
       </ul>
-      <h2>População ao Longo do Tempo:</h2>
+      <h2 className="text-2xl font-semibold mt-6 mb-2">
+        População ao Longo do Tempo:
+      </h2>
       <PopulationChart data={countryInfo?.population} />
     </div>
   );
